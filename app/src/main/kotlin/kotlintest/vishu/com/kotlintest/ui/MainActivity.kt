@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         var gingerService = RestClient.getClient()
         val location = Location("28.4792943", "77.0430799")
+
+        // rx-java, retrofit chaining two rest calls
         gingerService
                 ?.getCategoryList(location)
                 ?.flatMap { Observable.from(it.categories) }
@@ -38,8 +40,11 @@ class MainActivity : AppCompatActivity() {
                 ?.subscribe()
     }
 
-
-        /*call?.observeOn(AndroidSchedulers.mainThread())?.subscribeOn(Schedulers.newThread())?.retry(5)?.subscribe(object : Subscriber<Category>() {
+        //simple rx-java, retrofit
+        /*call?.observeOn(AndroidSchedulers.mainThread())?
+        .subscribeOn(Schedulers.newThread())
+        ?.retry(5)
+        ?.subscribe(object : Subscriber<Category>() {
                     override fun onCompleted() {
                         L.m("Completed")
                     }
@@ -57,6 +62,8 @@ class MainActivity : AppCompatActivity() {
                         testList(category.categories)
                     }
                 })*/
+
+        //retrofit without rx-java
         /*call?.enqueue(object : Callback<Category> {
             override fun onResponse(response: Response<Category>) {
                 if (response.isSuccess) {
