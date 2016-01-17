@@ -36,13 +36,13 @@ class MainActivity : AppCompatActivity(), FusedLocationInterface {
         setContentView(R.layout.activity_main)
         var gingerService = RestClient.getClient()
         val location = Location("28.4792943", "77.0430799")
-        val fusedLocation: FusedLocation  = FusedLocation.getInstance(this);
+        val fusedLocation: FusedLocation = FusedLocation.getInstance(this);
         /*if (Utils.getInstance(activity).canGetLocation()) {*/
-            if (fusedLocation.isGoogleServicesAvailable!!) {
-                fusedLocation.getFusedLocation(this);
-            } else {
-                Toast.makeText(this, "Google Play Services Not Available", Toast.LENGTH_SHORT).show();
-            }
+        if (fusedLocation.isGoogleServicesAvailable!!) {
+            fusedLocation.getFusedLocation(this);
+        } else {
+            Toast.makeText(this, "Google Play Services Not Available", Toast.LENGTH_SHORT).show();
+        }
         /*} else {
             showGpsAlert();
         }*/
@@ -82,44 +82,44 @@ class MainActivity : AppCompatActivity(), FusedLocationInterface {
 */
     }
 
-        //simple rx-java, retrofit
-        /*call?.observeOn(AndroidSchedulers.mainThread())?
-        .subscribeOn(Schedulers.newThread())
-        ?.retry(5)
-        ?.subscribe(object : Subscriber<Category>() {
-                    override fun onCompleted() {
-                        L.m("Completed")
-                    }
+    //simple rx-java, retrofit
+    /*call?.observeOn(AndroidSchedulers.mainThread())?
+    .subscribeOn(Schedulers.newThread())
+    ?.retry(5)
+    ?.subscribe(object : Subscriber<Category>() {
+                override fun onCompleted() {
+                    L.m("Completed")
+                }
 
-                    override fun onError(e: Throwable) {
-                        if (e is HttpException) {
-                            L.m("Error")
-                        }
-                        if (e is IOException) {
-                            L.m("No Internet")
-                        }
+                override fun onError(e: Throwable) {
+                    if (e is HttpException) {
+                        L.m("Error")
                     }
-
-                    override fun onNext(category: Category) {
-                        testList(category.categories)
+                    if (e is IOException) {
+                        L.m("No Internet")
                     }
-                })*/
+                }
 
-        //retrofit without rx-java
-        /*call?.enqueue(object : Callback<Category> {
-            override fun onResponse(response: Response<Category>) {
-                if (response.isSuccess) {
-                    Log.d("msg", "success")
-                    var category: Category = response.body()
+                override fun onNext(category: Category) {
                     testList(category.categories)
-                } else
-                    Log.d("msg", "errorbody")
-            }
+                }
+            })*/
 
-            override fun onFailure(t: Throwable) {
-                Log.d("msg", "failed")
-            }
-        })*/
+    //retrofit without rx-java
+    /*call?.enqueue(object : Callback<Category> {
+        override fun onResponse(response: Response<Category>) {
+            if (response.isSuccess) {
+                Log.d("msg", "success")
+                var category: Category = response.body()
+                testList(category.categories)
+            } else
+                Log.d("msg", "errorbody")
+        }
+
+        override fun onFailure(t: Throwable) {
+            Log.d("msg", "failed")
+        }
+    })*/
 
 
     private fun testList(category: ArrayList<CategoryDetails>?) {
