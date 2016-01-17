@@ -8,10 +8,13 @@ import android.view.MenuItem
 import kotlintest.vishu.com.kotlintest.R
 import kotlintest.vishu.com.kotlintest.data.CategoryDetails
 import kotlintest.vishu.com.kotlintest.data.Location
+import kotlintest.vishu.com.kotlintest.data.SubCategory
 import kotlintest.vishu.com.kotlintest.data.SubCategoryParams
 import kotlintest.vishu.com.kotlintest.network.RestClient
+import kotlintest.vishu.com.kotlintest.utilities.L
 
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.annotations.NotNull
 import retrofit.*
 import rx.Observable
 import rx.Subscriber
@@ -32,12 +35,32 @@ class MainActivity : AppCompatActivity() {
         // rx-java, retrofit chaining two rest calls
         gingerService
                 ?.getCategoryList(location)
+                ?.doOnError { println(it.message) }
+                //?.doOnCompleted { println("Completed Category Request") }
                 ?.flatMap { Observable.from(it.categories) }
                 ?.flatMap { it -> gingerService?.getProductList(SubCategoryParams("158", "4108", it.name)) }
                 ?.doOnNext { it -> for(x in it.list!!){println(x)} }
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribeOn(Schedulers.newThread())
-                ?.subscribe()
+                ?.subscribe(object : Subscriber<SubCategory>() {
+                    override fun onCompleted() {
+                        L.m("Completed")
+                    }
+
+                    override fun onError(e: Throwable) {
+                        if (e is HttpException) {
+                            L.m("Error")
+                        }
+                        if (e is IOException) {
+                            L.m("No Internet")
+                        }
+                    }
+
+                    override fun onNext(subCategory: SubCategory) {
+                        for(x in subCategory.list!!){println(x.brand)}
+                    }
+                })
+
     }
 
         //simple rx-java, retrofit
