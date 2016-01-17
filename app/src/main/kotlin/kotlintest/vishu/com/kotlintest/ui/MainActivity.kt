@@ -35,7 +35,11 @@ class MainActivity : AppCompatActivity() {
         // rx-java, retrofit chaining two rest calls
         gingerService
                 ?.getCategoryList(location)
-                ?.doOnError { println(it.message) }
+                ?.doOnError {
+                    if(it is HttpException) println("Server Error")
+                    else if(it is IOException) println("No Internet")
+                    else println("Unknown Error !!!")
+                }
                 //?.doOnCompleted { println("Completed Category Request") }
                 ?.flatMap { Observable.from(it.categories) }
                 ?.flatMap { it -> gingerService?.getProductList(SubCategoryParams("158", "4108", it.name)) }
