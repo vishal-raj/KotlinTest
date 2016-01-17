@@ -5,11 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import kotlintest.vishu.com.kotlintest.R
 import kotlintest.vishu.com.kotlintest.data.CategoryDetails
 import kotlintest.vishu.com.kotlintest.data.Location
 import kotlintest.vishu.com.kotlintest.data.SubCategory
 import kotlintest.vishu.com.kotlintest.data.SubCategoryParams
+import kotlintest.vishu.com.kotlintest.location.FusedLocation
+import kotlintest.vishu.com.kotlintest.location.FusedLocationInterface
+import kotlintest.vishu.com.kotlintest.location.LocationFoundEvent
+import kotlintest.vishu.com.kotlintest.location.Mybus
 import kotlintest.vishu.com.kotlintest.network.RestClient
 import kotlintest.vishu.com.kotlintest.utilities.L
 
@@ -24,16 +29,26 @@ import rx.schedulers.Schedulers
 import java.io.IOException
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FusedLocationInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var gingerService = RestClient.getClient()
         val location = Location("28.4792943", "77.0430799")
+        val fusedLocation: FusedLocation  = FusedLocation.getInstance(this);
+        /*if (Utils.getInstance(activity).canGetLocation()) {*/
+            if (fusedLocation.isGoogleServicesAvailable!!) {
+                fusedLocation.getFusedLocation(this);
+            } else {
+                Toast.makeText(this, "Google Play Services Not Available", Toast.LENGTH_SHORT).show();
+            }
+        /*} else {
+            showGpsAlert();
+        }*/
 
         // rx-java, retrofit chaining two rest calls
-        gingerService
+        /*gingerService
                 ?.getCategoryList(location)
                 ?.doOnError {
                     if(it is HttpException) println("Server Error")
@@ -43,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 //?.doOnCompleted { println("Completed Category Request") }
                 ?.flatMap { Observable.from(it.categories) }
                 ?.flatMap { it -> gingerService?.getProductList(SubCategoryParams("158", "4108", it.name)) }
-                ?.doOnNext { it -> for(x in it.list!!){println(x)} }
+                ?.doOnNext { it -> for(x in it.list!!){*//*println(x)*//*} }
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribeOn(Schedulers.newThread())
                 ?.subscribe(object : Subscriber<SubCategory>() {
@@ -64,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                         for(x in subCategory.list!!){println(x.brand)}
                     }
                 })
-
+*/
     }
 
         //simple rx-java, retrofit
@@ -114,7 +129,16 @@ class MainActivity : AppCompatActivity() {
         category?.sortBy { it.id }
         category?.map { it.img = "image" }
         for (temp in category!!) {
-            println(temp.id + ":" + temp.name + ":" + temp.img)
+            //println(temp.id + ":" + temp.name + ":" + temp.img)
+        }
+    }
+
+    override fun HashLocation(hashmap: HashMap<String, String>?) {
+        if (!(hashmap?.get("lat").equals("") && hashmap?.get("lng").equals(""))) {
+            L.m("Lat: " + hashmap?.get("lat") + ", " + "Lng: " + hashmap?.get("lng"));
+            //Mybus.instance.post(LocationFoundEvent());
+        } else {
+            L.m("Location no found :(");
         }
     }
 
