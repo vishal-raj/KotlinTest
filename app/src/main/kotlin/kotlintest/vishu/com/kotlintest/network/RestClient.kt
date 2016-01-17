@@ -3,6 +3,7 @@ package kotlintest.vishu.com.kotlintest.network
 import com.squareup.okhttp.Interceptor
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.logging.HttpLoggingInterceptor
+import org.jetbrains.annotations.NotNull
 import retrofit.GsonConverterFactory
 import retrofit.Retrofit
 import retrofit.RxJavaCallAdapterFactory
