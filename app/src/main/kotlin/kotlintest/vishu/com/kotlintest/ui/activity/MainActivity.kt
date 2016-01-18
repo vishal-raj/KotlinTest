@@ -1,4 +1,4 @@
-package kotlintest.vishu.com.kotlintest.ui
+package kotlintest.vishu.com.kotlintest.ui.activity
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
