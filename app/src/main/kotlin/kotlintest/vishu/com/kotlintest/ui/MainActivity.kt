@@ -11,12 +11,9 @@ import kotlintest.vishu.com.kotlintest.data.CategoryDetails
 import kotlintest.vishu.com.kotlintest.data.Location
 import kotlintest.vishu.com.kotlintest.data.SubCategory
 import kotlintest.vishu.com.kotlintest.data.SubCategoryParams
-import kotlintest.vishu.com.kotlintest.location.FusedLocation
-import kotlintest.vishu.com.kotlintest.location.FusedLocationInterface
-import kotlintest.vishu.com.kotlintest.location.LocationFoundEvent
-import kotlintest.vishu.com.kotlintest.location.Mybus
+import kotlintest.vishu.com.kotlintest.location.*
 import kotlintest.vishu.com.kotlintest.network.RestClient
-import kotlintest.vishu.com.kotlintest.utilities.L
+import kotlintest.vishu.com.kotlintest.utilities.*
 
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.annotations.NotNull
@@ -36,16 +33,16 @@ class MainActivity : AppCompatActivity(), FusedLocationInterface {
         setContentView(R.layout.activity_main)
         var gingerService = RestClient.getClient()
         val location = Location("28.4792943", "77.0430799")
-        val fusedLocation: FusedLocation = FusedLocation.getInstance(this);
-        /*if (Utils.getInstance(activity).canGetLocation()) {*/
-        if (fusedLocation.isGoogleServicesAvailable!!) {
-            fusedLocation.getFusedLocation(this);
+        val fusedLocation: FusedLocationKotlin? = FusedLocationKotlin.getInstance(this);
+        if (Utils.getInstance(this)?.canGetLocation()!!) {
+            if (fusedLocation?.isGoogleServicesAvailable!!) {
+                fusedLocation?.getFusedLocation(this);
+            } else {
+                Toast.makeText(this, "Google Play Services Not Available", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, "Google Play Services Not Available", Toast.LENGTH_SHORT).show();
+            //showGpsAlert();
         }
-        /*} else {
-            showGpsAlert();
-        }*/
 
         // rx-java, retrofit chaining two rest calls
         /*gingerService
