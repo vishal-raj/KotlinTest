@@ -5,5 +5,6 @@ Library Used:
 
 	1. Retrofit 2.0.0-beta1
 	2. rx-java 1.0.16
+	3. Google fused locations
 	
 **Under Development**, *only for testing various features of kotlin for* **android**.
