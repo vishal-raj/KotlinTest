@@ -22,10 +22,19 @@ class FusedLocationKotlin private constructor(context: Context) : LocationListen
     internal var mLocationRequest: LocationRequest? = null
 
     init {
-        mGoogleApiClient = null
-        isGoogleServicesAvailable = false
         createLocationRequest()
         initGoogleApiClient(context)
+    }
+
+    companion object {
+        private var mInstance: FusedLocationKotlin? = null
+
+        fun getInstance(context: Context): FusedLocationKotlin? {
+            if (mInstance == null) {
+                mInstance = FusedLocationKotlin(context)
+            }
+            return mInstance
+        }
     }
 
     private fun initGoogleApiClient(context: Context) {
@@ -93,19 +102,4 @@ class FusedLocationKotlin private constructor(context: Context) : LocationListen
             mGoogleApiClient!!.disconnect()
         }
     }
-
-    companion object {
-
-        private val FASTEST_INTERVAL: Long = 500
-        private val INTERVAL: Long = 1000
-        private var mInstance: FusedLocationKotlin? = null
-
-        fun getInstance(context: Context): FusedLocationKotlin? {
-            if (mInstance == null) {
-                mInstance = FusedLocationKotlin(context)
-            }
-            return mInstance
-        }
-    }
-
 }
